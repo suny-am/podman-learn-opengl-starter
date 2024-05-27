@@ -1,0 +1,9 @@
+services:
+
+  app:
+    container_name: learn-opengl
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace
+    command: tail -f /dev/null

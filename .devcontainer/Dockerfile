@@ -1,32 +1,19 @@
-FROM mcr.microsoft.com/devcontainers/cpp:1-debian-11
+FROM debian:12
 
-ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE="none"
-
-COPY ./reinstall-cmake.sh /tmp/
-COPY ./glad.zip /tmp/
-
+WORKDIR /workspace
 RUN \
-    if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
-        chmod +x /tmp/reinstall-cmake.sh && /tmp/reinstall-cmake.sh ${REINSTALL_CMAKE_VERSION_FROM_SOURCE}; \
-    fi && \
-    rm -f /tmp/reinstall-cmake.sh && \
-    sudo apt-get update && \
     export DEBIAN_FRONTEND=noninteractive && \
-    sudo apt-get -y install --no-install-recommends libwayland-dev libxkbcommon-dev xorg-dev && \
-    sudo apt-get install -y cmake pkg-config  && \
-    sudo apt-get install -y mesa-utils libglu1-mesa-dev freeglut3-dev mesa-common-dev  && \
-    sudo apt-get install -y libglew-dev libglfw3-dev libglm-dev  && \
-    sudo apt-get install -y libao-dev libmpg123-dev
-    
-WORKDIR /usr/local/lib/
-RUN  \  
-    git clone https://github.com/glfw/glfw.git && \
-    cd glfw && \
-    cmake . && \
-    make && \
-    sudo make install && \
-    unzip /tmp/glad.zip -d /tmp/ && \
-    cp -R /tmp/include/* /usr/include/ && \
-    mkdir /workspace  && \
-    cp -R /tmp/src/* /workspace/*
-    rm -rf /tmp/glad.zip /tmp/include
+    apt-get update && \ 
+    apt-get install -y --no-install-recommends cmake \
+    make \
+    build-essential \
+    libxi-dev \
+    libxrandr-dev \
+    libxinerama-dev \
+    libxcursor-dev \
+    libgl1-mesa-dev \
+    xorg-dev \
+    git \
+    ca-certificates && \ 
+    git clone --recursive https://github.com/Polytonic/Glitter.git && \
+    rm -rf Glitter/.git*
